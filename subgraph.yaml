@@ -1,0 +1,29 @@
+specVersion: 0.0.2
+description: Liquid from Kitten Finance
+repository: https://github.com/hardforksoverknives/KiF-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Liquid
+    network: mainnet
+    source:
+      address: '0xC618D56b6D606E59c6B87Af724AB5a91eb40D1cb'
+      abi: Liquid
+      startBlock: 11728393
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Liquid
+      abis:
+        - name: Liquid
+          file: ./abis/Liquid.json
+      eventHandlers:
+        - event: BuyToken(indexed address,uint256,uint256)
+          handler: handleBuyToken
+        - event: SellToken(indexed address,uint256,uint256)
+          handler: handleSellToken
+      file: ./src/mapping.ts
+      

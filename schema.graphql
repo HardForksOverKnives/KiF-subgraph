@@ -1,0 +1,30 @@
+type Liquid @entity {
+  id: ID!
+  hodlrs: [LiquidHodler!]!
+  transactions: [LiquidTransaction!]!
+  totalSupply: BigInt!
+  burnedSupply: BigInt!
+  circulatingSupply: BigInt!
+  price: BigDecimal!
+  floorPrice: BigDecimal!
+  etherLocked: BigInt!
+  lastBlockUpdate: BigInt!
+}
+
+type LiquidTransaction @entity {
+  id: ID! # transaction hash
+  liquidAmt: BigInt!
+  ethAmt: BigInt!
+  address: Bytes! # buyer/seller's wallet address
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type LiquidHodler @entity {
+  id: ID!
+  balance: BigInt!
+  totalBought: BigInt!
+  totalSold: BigInt!
+  totalTransfered: BigInt! # todo
+  hodlPoints: BigDecimal! # .001pts per liq held every block
+}
