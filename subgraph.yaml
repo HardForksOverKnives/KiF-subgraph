@@ -25,5 +25,6 @@ dataSources:
           handler: handleBuyToken
         - event: SellToken(indexed address,uint256,uint256)
           handler: handleSellToken
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferToken
       file: ./src/mapping.ts
-      

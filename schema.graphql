@@ -1,30 +1,53 @@
 type Liquid @entity {
   id: ID!
-  hodlrs: [LiquidHodler!]!
-  transactions: [LiquidTransaction!]!
+  hodlrs: [LiquidHodlr!]! @derivedFrom(field: "liquid")
+  transactions: [LiquidTransaction!]! @derivedFrom(field: "liquid")
+  transfers: [LiquidTransfer!]! @derivedFrom(field: "liquid")
   totalSupply: BigInt!
   burnedSupply: BigInt!
   circulatingSupply: BigInt!
   price: BigDecimal!
   floorPrice: BigDecimal!
   etherLocked: BigInt!
-  lastBlockUpdate: BigInt!
+  lastHodlrPtsUpdateBlockNumber: BigInt!
 }
 
 type LiquidTransaction @entity {
   id: ID! # transaction hash
   liquidAmt: BigInt!
   ethAmt: BigInt!
-  address: Bytes! # buyer/seller's wallet address
+  address: ID! # buyer/seller's wallet address
   blockNumber: BigInt!
   timestamp: BigInt!
+  liquid: Liquid!
 }
 
-type LiquidHodler @entity {
+type LiquidHodlr @entity {
   id: ID!
   balance: BigInt!
   totalBought: BigInt!
   totalSold: BigInt!
   totalTransfered: BigInt! # todo
-  hodlPoints: BigDecimal! # .001pts per liq held every block
+  hodlPoints: BigDecimal! # .0000001 pts per liq held every block (updated every transaction involving hodlr)
+  lastBlockUpdate: BigInt!
+  liquid: Liquid!
 }
+
+# A subset of LiquidHodlrs
+# TopLiquidHodlrs get their hodlPoints updated every x blocks
+type TopLiquidHodlr @entity {
+  id: ID!
+  liquidHodlr: LiquidHodlr!
+  initiationBlockNumber: BigInt!
+  liquid: Liquid!
+}
+
+type LiquidTransfer @entity {
+  id: ID!
+  from: LiquidHodlr!
+  to: LiquidHodlr!
+  amount: BigInt!
+  liquid: Liquid!
+}
+
+
